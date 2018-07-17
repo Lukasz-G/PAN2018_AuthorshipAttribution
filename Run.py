@@ -1,4 +1,16 @@
-import os, torch, gc, codecs, time, math, random, numpy, heapq, configparser,argparse, sys, pickle, itertools, copy
+
+#This file is part of the PAN contest 2018 submission code.
+#It is supposed to work with the respective task data for training and testing. 
+#Take a look at https://pan.webis.de/clef18/pan18-web/author-identification.html
+
+#to run this software from the command line:
+# python Run.py -c folder_with_PAN_files -o folder_with_answers 
+
+
+
+
+
+import os, torch, codecs, time, random, argparse
 from torch.autograd import Variable
 from sklearn.preprocessing import LabelEncoder 
 from random import shuffle
@@ -19,7 +31,6 @@ global use_cuda
 use_cuda = False#torch.cuda.is_available()
 
 ModelComp.use_cuda=use_cuda
-Config = configparser.ConfigParser()
 
 import matplotlib
 matplotlib.use('Agg')
@@ -54,10 +65,91 @@ def main():
     for nb, problem in enumerate(problem_names):
         problem_solving(nb, problem, problem_languages, args, time_start)
         
-        gc.collect()
         
         
 def problem_solving(nb, problem, problem_languages, args, time_start): 
+  
+
+     
+    if problem_languages[nb] == "pl":
+       pass#continue
+   #if (nb != 0 and nb != 0):
+   #    continue
+   
+   
+    print(problem)        
+    local_path = get_problem_truth(args.c, problem) 
+    print(local_path)
+    problem_collection, number_of_texts = tagging_problem(local_path, problem_languages[nb])
+   
+    print('tagged')
+   
+    authors = make_authors_list(problem_collection)
+    print('authors defined')
+   
+   
+   
+
+       
+    frequency = 8000#random.choice([500,600,800])
+    freq1 = 400#random.choice([100,150,200,250,300,350]) 
+    freq2 =  1000#random.choice([100,150,200,250,300,350])
+    
+    training_set_size, test_set_size = set_sizes(problem_collection)
+    
+    
+    random.seed(time.time())
+    
+    print(frequency, freq1, freq2)
+    #del problem_collection
+    trunc_words1, trunc_words2 = create_char_ngrams_stat(problem_collection, freq1, freq2, problem_languages[nb])
+
+    problem_collection = filter_problem_corpus(problem_collection, trunc_words1, trunc_words2, problem_languages[nb])
+    
+    problem_collection, nb_categories = create_ngrams_and_splitgrams(problem_collection)
+    
+    words_encoder, words_num = stats_for_ngrams_and_skipgrams(problem_collection, nb_categories, frequency)
+
+    freq_feature, words_num = vectorise_problem_corpus(problem_collection, words_encoder, words_num, frequency, number_of_texts)
+    
+    freq_feature_form_norm, pca, network_sizes = compute_mean_and_std(freq_feature, problem_collection,words_num)
+    
+    
+    model_test = define_model(network_sizes, len(authors), freq_feature_form_norm,len(words_encoder))
+    optimiser_test = define_optimiser(model_test)
+    bceloss = torch.nn.NLLLoss()
+    if use_cuda:
+        bceloss = bceloss.cuda()
+        
+    mseloss = torch.nn.MSELoss()
+    if use_cuda:
+        mseloss = mseloss.cuda()
+    
+    #global model
+    model = training([None, model_test], training_set_size, 
+                     problem_collection, authors, bceloss, mseloss,(None, optimiser_test), 
+                     freq_feature_form_norm, None)
+    
+    print('after training')
+    
+    result = testing(problem_collection, model, authors, freq_feature_form_norm, None)
+    
+    print('after testing')
+    
+    with open(os.path.join(args.o,'answers-{}.json'.format(problem)), 'w') as outfile:
+        json.dump(result, outfile)
+    
+    time_now = time.time()
+    
+    timing = time_now -time_start
+    print(as_minutes(timing))
+
+  
+  
+    print('sdadkashdksadfksahfksafhksadhf')    
+    return    
+if __name__ == '__main__':
+    main()
   
     if True:
         
