@@ -901,7 +901,7 @@ def tagging_problem(path_to_problem, language):
 
 
 
-def create_char_ngrams_stat(problem_collection, freq1, freq2, language):
+def create_char_ngrams_stat(problem_collection, freq1, language):
     
     flattened_all_text_ngrams = []
     flattened_all_text_lemma = []
@@ -946,7 +946,7 @@ def create_char_ngrams_stat(problem_collection, freq1, freq2, language):
     #cnt1 = Counter(flattened_all_text_ngrams)
     trunc_words1 = [k for k, _ in strange(Counter(flattened_all_text_ngrams).most_common())]
     #cnt2 = Counter(flattened_all_text_lemma)
-    trunc_words2 = [k for k, _ in strange(Counter(flattened_all_text_lemma).most_common(freq2))]
+    trunc_words2 = [k for k, _ in strange(Counter(flattened_all_text_lemma).most_common(freq1))]
     
     del flattened_all_text_ngrams, flattened_all_text_lemma, 
     problem_collection
@@ -960,8 +960,6 @@ def create_char_ngrams_stat(problem_collection, freq1, freq2, language):
     
 def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language): 
     
-    #global problem_collection
-    
     problem_collection = problem_
     
     for author, texts in strange(problem_collection.items()):
@@ -974,24 +972,16 @@ def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language):
                     token = a[0]
                     lemma = a[1]
                     w = '_' + token + '_'
-                    #print(w)
-                    #quit()
-                    #token_ = ngrams(w,3)
-                    #l_ngrmed = ['-'.join(list(tri)) for tri in strange(ngrams(w,3))]
-                    #lemma = [lemma]
+                  
                     word_frags = []
                     for tri in strange(ngrams(w,3)):
-                    #for l in l_ngrmed:
+                  
                         tri = '-'.join(list(tri))
                         if tri in trunc_words1:
                             word_frags.append(tri)
                         del tri 
-                            #letters_=[lemma]#list(lemma)#[lemma]#list(lemma)
-                    #del l_ngrmed
-                    #else:
-                    #    letters_=[]
-                    #letters_ = [] if letters_ == ['<UNK>'] else letters_
-                    x = word_frags# + [a[1]]
+                        
+                    x = word_frags
                     if lemma in trunc_words2:
                         y = [lemma] + [a[2]]
                         k = [lemma]
@@ -1009,10 +999,7 @@ def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language):
                     text[2].extend(k)
                     text[3].extend(z)
                     text[4].extend([a[2]])
-                #print(text)
-                #quit()
-            
-            
+          
             
             elif language == 'pl':
                 
@@ -1024,7 +1011,6 @@ def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language):
                         y = [lemma] + [pos]
                         k = [lemma]
                     else:
-                        #pass
                         y = [pos]
                         k = [lemma]  
                     
@@ -1036,11 +1022,7 @@ def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language):
                     text[4].extend([pos])
                 for a in text_self[1]:
                     w = '_' + a + '_'
-                    #print(w)
-                    #quit()
-                    #token_ = ngrams(w,3)
-                    #l_ngrmed = ['-'.join(list(tri)) for tri in strange(ngrams(w,3))]
-                    #lemma = [lemma]
+               
                     word_frags = []
                     for tri in strange(ngrams(w,3)):
                     #for l in l_ngrmed:
@@ -1062,53 +1044,24 @@ def filter_problem_corpus(problem_, trunc_words1, trunc_words2, language):
             del text
         del texts, author
     del trunc_words1, trunc_words2, problem_
-    #gc.collect()
+
     
     return problem_collection
 
 def create_ngrams_and_splitgrams(problem_, unigrams_char= True, unigrams_lemma= True):
     
-    #global problem_collection
     problem_collection = problem_
     
     for author, texts in strange(problem_collection.items()):
         for text_name, text_self in strange(texts.items()):
             
-            #print(len(text_self))
-            #quit()
-            
-            #tetragrams = ngrams(text_self[0], 4)
-            #skip3 = skipgram(text_self[0], 3)
-            #trigrams = ngrams(text_self[1], 3)
-            #trigrams2 = ngrams(text_self[4], 3)
-            #tetragrams = ngrams(text_self[0], 4)
-            
-            
-            
-            #if text_name == 'known00005.txt' and author == 'candidate00004':
-            
-            #    print(text_name, author,text_self[1], text_self[2])
-            #    quit()
-          
-            
-            #skip4 = skipgram(text_self[0], 5)
-            #unigrams = ngrams(text_self[2], 1)
+         
             
             
             skip_1 = skipgram(text_self[1], 3)
             skip_2 = skipgram(text_self[1], 4)
             skip_3 = skipgram(text_self[1], 5)
-            #skip_4 = skipgram(text_self[1], 6)
-            #skip_5 = skipgram(text_self[1], 7)
-            #skip_com1 = skip_1 + skip_2  
-            #skip_3 + skip_4 + skip_5 
-            #skip_com2 = skip_3 + skip_4 + skip_5 
-            #skip_1 = skipgram(text_self[1], 3)
-            #skip_2 = skipgram(text_self[1], 4)
-            #skip_3 = skipgram(text_self[1], 5)
-            #skip_4 = skipgram(text_self[1], 6)
-            #skip_5 = skipgram(text_self[1], 7)
-            #skip_pos = skip_1 + skip_2 + skip_3 + skip_4 + skip_5 
+           
             
             
             
@@ -1116,43 +1069,17 @@ def create_ngrams_and_splitgrams(problem_, unigrams_char= True, unigrams_lemma= 
             
             
             
-            
-            #skip4 = skipgram(text_self[0], 5)
-            #unigrams_char = ngrams(text_self[0], 1)
-            #unigrams_lemma = ngrams(text_self[2], 1)
-            
-            #tetragrams = ['-'.join(list(bi)) for bi in tetragrams]
+     
             
             trigrams = ['-'.join(list(tri)) for tri in strange(ngrams(text_self[1], 3))]
             trigrams2 = ['-'.join(list(tri)) for tri in strange(ngrams(text_self[4], 3))]
             unigrams_char = ['-'.join(list(uni)) for uni in strange(ngrams(text_self[0], 1))]
             unigrams_lemma = ['-'.join(list(uni)) for uni in strange(ngrams(text_self[2], 1))]
-            #tetragrams = ['-'.join(list(tetra)) for tetra in tetragrams]
-            
-            
-            
-            
-            #all_grams = tetragrams + trigrams + bigrams# +  + tetragrams
-            #print(all_grams[:100])
-            #print(skip)
-            #print(trigrams)
-            #quit()unigrams_lemma, unigrams_char, trigrams, trigrams2, skip_1, skip_2, skip_3]
             input = [unigrams_lemma, unigrams_char, trigrams, trigrams2, skip_1, skip_2, skip_3]
-            problem_collection[author][text_name] = input#) for tetragram in tetragrams]
+            problem_collection[author][text_name] = input
             
             len_input = len(input)
             
-            del input, unigrams_lemma, unigrams_char, trigrams, 
-            trigrams2,skip_1, skip_2, skip_3, 
-            #for gram in tetragrams:
-            #    print(list(gram))
-            #quit()
-            #print(author,text_name,text_self[:10])
-            
-            del text_self, text_name
-            
-        del texts, author   
-    #gc.collect()
       
     return problem_collection, len_input
 
@@ -1191,7 +1118,6 @@ def stats_for_ngrams_and_skipgrams(problem_collection, nb_feature_categories, fr
     words_encoder = []
     for nb_, tw in strange(enumerate(trunc_words)):
         we = index_words(tw)
-        #save_tools(we, os.path.join(os.getcwd(), 'words_encoder_{}'.format(nb_)))
         wn = len(we.classes_)
         words_encoder.append(we)
         words_num.append(wn)
@@ -1208,7 +1134,6 @@ def stats_for_ngrams_and_skipgrams(problem_collection, nb_feature_categories, fr
 def vectorise_problem_corpus(problem_collection, words_encoder, words_num, frequency, number_of_texts):
     
     
-    #torch.FloatTensor(words_num[x],number_of_texts).zero_()
     freq_feature = [[] for x in range(len(words_encoder))]
     for nb1, (author, texts) in strange(enumerate(problem_collection.items())):
 
@@ -1223,9 +1148,6 @@ def vectorise_problem_corpus(problem_collection, words_encoder, words_num, frequ
             del text_name, text_self
     
         del author, texts
-    
-    del problem_collection, words_encoder, frequency, number_of_texts
-    #gc.collect()
     
     return freq_feature, words_num
 
@@ -1297,12 +1219,8 @@ def compute_mean_and_std(freq_feature, problem_collection, words_num):
             del op, text_name
         del texts, author     
     
-    #print(list_of_all)
-    
-    #del problem_collection
-    
+  
     freq_feature_form_norm = []
-    pca= []
     network_sizes = []
     for nb_, text in strange(enumerate(freq_feature)):
         
@@ -1328,93 +1246,12 @@ def compute_mean_and_std(freq_feature, problem_collection, words_num):
             training_set = scaler.fit_transform(training_set)
             test_set = scaler.transform(test_set)
             network_sizes.append(training_set.shape[1])
-            #freq_feature_form_norm.append([mean_freq, freq_std])
-            #text = torch.from_numpy(text)
-            #mean and std only for training !!!
-            #print(labels)
-            #quit()
-            
-            #freq = torch.cat(freq, dim=0)
-            #list_of_knows = torch.LongTensor(list_of_knows)
-            #list_of_unknows = torch.LongTensor(list_of_unknows)
-            #freq1 = freq[list_of_knows]
-            #freq2 = freq[list_of_unknows]
-            #print(freq, freq1)
-            #quit()
-            
-            #freq_ = freq.log
-            #mean_freq = torch.mean(text,0)
-            #freq_std = torch.std(freq, dim=0)
-            #mean_freq2 = torch.mean(freq2,0)
-            #freq_std2 = torch.std(freq2, dim=0)
-            
-            
-            #print(mean_freq,freq_std)
-            #quit()
-            
-            #freq_ = freq_ - mean_freq
-            #print(freq_.norm(p=2), freq_std[freq_std==0.0])
-            #freq_ = (freq_ / (1+freq_std))
-            
-            #print(freq_.norm(p=2))
-            #U,S,V = torch.svd(freq_.t(),some=False)
-            #c = torch.mm(freq_,U[:,:2])
-            
-            #plt.figure()
-            
-            #c_std = torch.std(c,dim=1)
-            #variance = torch.pow(2,c_std)
-            #for auto in range(c.size()[0]):
-            #    plt.scatter(c[auto,0],c[auto,1],label=auto)
-                #ax.annotate(auto, c[auto,0],c[auto,1]) 
-            #plt.legend()
-            
-            #plt.savefig('pca for features')
-            
-            #print(c.size())#(variance/variance.sum())[:10].sum())
-            #quit()
-            
-            #print(freq,mean_freq,freq_std)
-            #quit()
-            #freq_ = freq - mean_freq.expand_as(freq)
-            #freq_normalised = freq_ / (freq_std.expand_as(freq))
-            #freq_norm.append(freq_normalised)
-            
-            #nonzeroresult, _ = freq.nonzero().sort(dim=0)
-            
-            #f = nonzeroresult[:,1].numpy().tolist()
-            
-            #fc = Counter(f)
-            
-            #n_list = []
-            #for x,y in fc.most_common():
-            #    n_list.append([x,y])
-                #print(x,y)
-            #n_list = torch.FloatTensor(n_list)
-            #_, n_idx = n_list[:,0].sort(dim=0)
-            #n_list = n_list[n_idx][:,1]
-            
-            #idf = n_list.size()[0] / (1 + n_list.float())
-            
-            #if_idf = freq * idf
-            #print(freq, if_idf)
-            
-            #quit()
-            
-            #print(mean_freq, freq_std)
-            #quit()
-            
-            del vectorizer, scaler
+           
             
             freq_feature_form_norm.append([training_set, test_set, list_of_knows_names])
-            #pca.append(c)
-            #pca_size.append(c.size()[1])
-    #quit()
+
     
-    del freq_feature, problem_collection, words_num#, text_name#, text_self
-    #gc.collect()
-    
-    return freq_feature_form_norm, pca, network_sizes
+    return freq_feature_form_norm, network_sizes
 
 def make_authors_list(problem_collection):
     
@@ -1429,21 +1266,15 @@ def make_authors_list(problem_collection):
     
     return authors_
 
-def define_model(nb_words, authors_len, freq_feature_form_norm, nb_fcat):
+def define_model(nb_words, authors_len, nb_fcat):
     
     model = StyloMeasurer(nb_words=nb_words, nb_authors=authors_len, 
-                       freq_feature=freq_feature_form_norm, 
-                       nb_fcat=nb_fcat#.#*len(cut_list),
-                       #freq_masking = freq_masking
+                       nb_fcat=nb_fcat
                        )    
     
   
     
-    #for p, _ in model.named_parameters():
-    #    print(p)
-    del nb_words, authors_len, freq_feature_form_norm, nb_fcat
-    #quit()
-    #gc.collect()
+   
     
     if use_cuda:
         model = model.cuda()
@@ -1637,22 +1468,13 @@ def label_predictor(tensors_train, tensors_test, labels_train, authors_list):
     return best_authors
     
 
-def training(m_, training_set_size, problem_collection,authors_list, loss_function1, 
-             loss_function2, optimiser, freq_feature, noisy_labels):
+def training(model, training_set_size, problem_collection,authors_list, loss_function1, 
+             optimiser, freq_feature):
     
-    #global model
-    model = m_
-    model = model[1]
-    #global optimiser_train, optimiser_test
-    optimiser_training, optimiser_test = optimiser
+
+        
     
     
-    
-    #counted_noisy = Counter(noisy_labels)
-    
-    #print(noisy_labels)
-    
-    #quit()
     
     
     loss_general = []
@@ -1669,369 +1491,200 @@ def training(m_, training_set_size, problem_collection,authors_list, loss_functi
     label_svm_pred = None
     u = -1
     alphas = []
-    while True:#for _ in range(10):
-        
-        #alpha = sigmoid_annealing_schedule(u, 10)
-        #alphas.append(alpha)
-        u += 1
-       
-        #print(u)
+    
+    u += 1
+    
+    model.train()
+    
+    loss_comparator = 0.0
+   
+    acc_encoder = 0.0
+    acc_corr = 0.0
+    
+    
+    inputs = []
+    corrupted = []
+    list_of_names = []
+    for (feat, test, names) in freq_feature:
+            #print(feat)
+            #quit()
+        feat = torch.from_numpy(feat)
+        test = torch.from_numpy(test)
+        inputs.append(feat)
+        corrupted.append(test)
       
-        #alpha = sigmoid_annealing_schedule(iteritemsitemsitems_comp, 200)
-        #print("alpha: {}".format(alpha))
-        #alphas.append(alpha)
-        #model[0].train()
+    random_x = [x for x in range(feat.size()[0])]
+   
+    random.shuffle(random_x)
+    nb_ = 0
+    nb2= 0
+    nb3=0
+    nb_corrupted = 0
+    seen_test_list = []
+    list_compressed_data_train = []
+    list_compressed_data_test = []
+    
+    for x in range(feat.size()[0]):
+        nb2 = random_x[x]
+        unknown = False
+        
+        i_s = []
+        if not(unknown):
+            #print('known')
+            #x = names.index(author)
+            for i in inputs:
+                input_ = torch.zeros(i[nb2].size()).float()
+                input_ = input_.copy_(i[nb2].float())
+                #print(input_.size())
+                i_s.append(input_)
+        #
+        
+        else:
+            pass
+          
+        model.zero_grad()
+      
         model.train()
-        
-        loss_comparator = 0.0
+    
+        nb_ += 1
        
-        acc_encoder = 0.0
-        acc_corr = 0.0
+        loss = 0.0
+        
+      
+       
+        output_unknown, alter_label, estimator, auto_r, compressed2 = model(i_s, unknown)
         
         
-        inputs = []
-        corrupted = []
-        list_of_names = []
-        for (feat, test, names) in freq_feature:
-                #print(feat)
-                #quit()
-            feat = torch.from_numpy(feat)
-            test = torch.from_numpy(test)
-            inputs.append(feat)
-            corrupted.append(test)
-            #del feat, test
-            #list_of_names.append(names)
-            #input_ = torch.zeros(feat[nb_text].size()).float()
-            #input_ = input_.copy_(feat[nb_text].float())
-            #inputs.append(input_)
-        #inputs = torch.cat(inputs, dim=1)
-        #corrupted = torch.cat(corrupted, dim=1)
-        #merged = list(zip(*inputs, corrupted))
-        #print(merged[0])
-        #quit()
-        random_x = [x for x in range(feat.size()[0])]
-        #print(random_x)
-        random.shuffle(random_x)
-        #print(random_x)
-        #quit()
-        nb_ = 0
-        nb2= 0
-        nb3=0
-        nb_corrupted = 0
-        seen_test_list = []
-        #authors_all = [author for author, _, _ in strange(new_generator_texts(problem_collection))]
-        list_compressed_data_train = []
-        list_compressed_data_test = []
-        
-        for x in range(feat.size()[0]):  #author, text_self, nb_text in new_generator_texts(problem_collection):
-        #for author, texts in problem_collection.items():
-            #print(x,nb2)
-            nb2 = random_x[x]
-            #x == 'unknown'
-            #if x == 'unknown':
-            #    unknown = True
-                #continue
-            #elif x != 'unknown':
-            unknown = False
-            
-            i_s = []
-            if not(unknown):
-                #print('known')
-                #x = names.index(author)
-                for i in inputs:
-                    input_ = torch.zeros(i[nb2].size()).float()
-                    input_ = input_.copy_(i[nb2].float())
-                    #print(input_.size())
-                    i_s.append(input_)
-            #
-            
-            else:
-                pass
-                #x = noisy_labels(nb_corrupted)
-                #for i in corrupted:
-                    #print(nb_corrupted)
-                #    input_ = torch.zeros(i[nb3].size()).float()
-                #    input_ = input_.copy_(i[nb3].float())
-                    #print(input_.size())
-                #    i_s.append(input_)
-                
-            #print(i_s)
-            #quit()
-            #if author == 'unknown':
-            #    unknown = True
-            #else:
-            #    unknown = False
-            
-            #skip = numpy.random.binomial(1,0.75)
-            #if skip:
-                #print(skip)
-            #    continue
-            
-            #print(len(inputs))    
-            #input = freq_feature[nb_text]        
+        if not(unknown):
             
             
             
-            #print(input)
-
-            #quit()            
-            #model[0].zero_grad()
-            model.zero_grad()
-            #model[0].train()
-            model.train()
-            #model.zero_grad()
-            nb_ += 1
-            #print('pair number: {}'.format(nb_))
-           
-            loss = 0.0
-            
-            #if not(unknown):
-            
-            #output_known, alter_label, _, auto_r1, compressed1 = training_model(i_s, unknown)#image_pairs=compressed_frags)
-           
-           
-           
-            output_unknown, alter_label, estimator, auto_r, compressed2 = model(i_s, unknown)
-            
-            #if not(unknown):
-            #    list_compressed_data_train.append(compressed1)
-            #else:
-            #    list_compressed_data_test.append(compressed1)
-            
-            #print(output.volatile,'sfdsfgfgfghrtztrzrzrz')
-            #print(len(names), nb2, len(authors_list))
-            
-            #for b in range(len(i_s)):
-            #    
-            #    target = Variable(i_s[b])
-            #    if use_cuda:
-            #        target = target.cuda()
-                
-                #print(auto_r[b].size(), target.size())    
-                
-            #    loss += loss_function2(auto_r[b].view(-1),target.view(-1))
-                
-            #loss_auto.backward()
-            #optimiser_training.step()
-            
-            
-            
-            if not(unknown):
-                
-                
-                
-                author_index_known = authors_list.index(names[nb2])
-                #print(author_index_known)
-                one_hot = torch.FloatTensor(len(authors_list)).zero_().unsqueeze(0)
-                items_id = torch.LongTensor([author_index_known]).unsqueeze(0)
-                value = torch.FloatTensor([1.0]).unsqueeze(0)
-                #print(freqs, items_id, one_hot)
-                #freq_of_a_text = freq_feature[nb3][:,nb2].unsqueeze(0)
-                #print(freq_of_a_text.size())
-                authorship_vector = one_hot.scatter_(1,items_id,value).squeeze()
-                
-                
-                
-                
-                
-                
-                author_index = Variable(torch.LongTensor([author_index_known]))
-                if use_cuda:
-                    author_index = author_index.cuda()
-        
-                loss += loss_function1(output_unknown.view(1,-1),author_index.view(-1))
-        
-                #loss += loss_function1(output_known.view(-1),author_index.view(-1))
-            
-            
-            
-            
-            
-            
-            if False:
-                pass# unknown:
-                
-               
-            
-            
-            
-            
-            
-            #author_index = Variable(torch.LongTensor([author_index_]))
-            #if use_cuda:
-            #    author_index = author_index.cuda()
-            
-            #loss += loss_function1(output2.view(1,-1),author_index.view(-1))/2.0
+            author_index_known = authors_list.index(names[nb2])
           
-            
-            #author_index = Variable(torch.LongTensor([guessed_label]))
-            #if use_cuda:
-            #    author_index = author_index.cuda()
-            
-            #loss += loss_function1(output3.view(1,-1),author_index.view(-1))
-                
-                
-                
-                
-                
-            
-                
-            
-            
-            #print(loss_comp) 
-            
-            #quit()
-            
-            
-            #print(loss)
-            
-            
-            #loss_combined = loss_comp #+ (loss_encoder_per_pair*alpha)
-            if not(unknown):
-                loss.backward()
-            #optimizer_encoder.step()
-            #if not(unknown):
-            
-            #else:
-            optimiser_test.step()
-            #optimiser_training.step()
+            one_hot = torch.FloatTensor(len(authors_list)).zero_().unsqueeze(0)
+            items_id = torch.LongTensor([author_index_known]).unsqueeze(0)
+            value = torch.FloatTensor([1.0]).unsqueeze(0)
            
-           
-            ##############
+            authorship_vector = one_hot.scatter_(1,items_id,value).squeeze()
             
-           
-            teach = numpy.random.binomial(1, 0.2)
-            if False:
-                pass# teach and u<=3:    
-               
-            if not(unknown):
-                #nb2 += 1
-                #nb2_list.append(nb2)
-                result = output_unknown.data.cpu().squeeze().topk(1,dim=0)[1][0]#.numpy().tolist()
-                #print(result, out)
-                #quit()
-                #print(result_, author_index_)
-                if result == author_index_known:
-                    #print(author_index_)
-                    acc_encoder += 1.0#/len(freq_feature)
-                #acc_encoder += acc_encoder#/len(freq_feature)
             
-         
-            if not(unknown):
-                loss_comparator += (loss.data.cpu().item())
             
+            
+            
+            
+            author_index = Variable(torch.LongTensor([author_index_known]))
+            if use_cuda:
+                author_index = author_index.cuda()
+    
+            loss += loss_function1(output_unknown.view(1,-1),author_index.view(-1))
+   
         
-          
-            #for p in model.parameters():
-            #    if p.grad is not None:
-            #        p.grad.data.clamp_(-1.0,1.0)
+        
+        
+        if False:
+            pass# unknown:
             
-                    
-            '''optimising model'''
-                            
-            #optimizer_encoder.step()
-            #optimiser.zero_grad()
-            model.zero_grad()
-            del loss, alter_label, estimator, auto_r, compressed2, output_unknown, author_index
-            del i_s, author_index_known, one_hot, items_id, value, authorship_vector
+           
+        
+        
+        
+        
+        
+      
+        if not(unknown):
+            loss.backward()
+      
+        
+  
+        optimiser.step()
+       
+        
+       
+        teach = numpy.random.binomial(1, 0.2)
+        if False:
+            pass
+           
+        if not(unknown):
+          
+            result = output_unknown.data.cpu().squeeze().topk(1,dim=0)[1][0]#.numpy().tolist()
+            
+            if result == author_index_known:
                 
+                acc_encoder += 1.0
         
      
-        
+        if not(unknown):
+            loss_comparator += (loss.data.cpu().item())
         
     
+      
+       
         
-        
-        #results.append((true_positive+true_negative)/(true_positive+true_negative+false_negative+false_positive))
-        #loss_general_encoder.append(loss_encoder/num_pair)
-        #print(nb2, nb3)
-        #quit()
-        acc_general_encoder.append(acc_encoder/(x+1))
-        #acc_corrupted.append(acc_corr/nb3)
-        #print(nb3)
-        loss_general.append(loss_comparator/nb_)  
-        
-        
-        
-        
-        base1 = round((max(loss_general)-min(loss_general))/10,5)
-        #base2 = round(max(results)/10,5)
-        #base3 = round(max(acc_corrupted)/10,5)
-        base4 = round(max(acc_general_encoder)/10,5)
-    
-        if base1 <= 0.0:
-            base1 = max(loss_general)/10.0
-        #if base2 <= 0.0:
-        #    base2 = 1.0
-        #if base3 <= 0.0:
-        #    base3 = 1.0
-        if base4 <= 0.0:
-            base4 = 1.0
-        #print(loss_general)
-        #save_plot(loss_general, os.getcwd(), 'loss_comp_{}'.format(1), base1)
-        #save_plot(results, os.getcwd(), 'dokladnosc_{}'.format(1), base2)
-        #save_plot(acc_corrupted, os.getcwd(), 'accuracy_corr_{}'.format(1), base3)
-        #save_plot(acc_general_encoder, os.getcwd(), 'accuracy_encoder_{}'.format(1), base4)   
-        #save_plot(alphas, os.getcwd(), 'alphas_{}'.format(1), 0.1)
-        #save_plot4(outputs, os.getcwd(), 'results_train_{}'.format(1))    
-        
-        if best_loss is None:
-            best_loss = min(loss_general)
-        #if best_loss_encoder is None:
-            #best_loss_encoder = min(loss_general_encoder)
+                
+        '''optimising model'''
+                        
+        model.zero_grad()
+        del loss, alter_label, estimator, auto_r, compressed2, output_unknown, author_index
+        del i_s, author_index_known, one_hot, items_id, value, authorship_vector
             
-        if best_loss > min(loss_general):# or best_loss_encoder > min(loss_general_encoder):
-            #torch.save(model.state_dict(), os.path.join(os.getcwd(), "model_saved_proc_{}".format(1)))
-            best_loss = min(loss_general)
-            #print("model saved after loss improvement")
-        #if best_loss_encoder > min(loss_general_encoder):
-            #torch.save(model_encoder.state_dict(), os.path.join(os.getcwd(), "model_encoder_saved_proc_{}".format(1)))
-            #best_loss_encoder = min(loss_general_encoder)
-            #print("encoder and comparator models saved after loss improvement")
-        
-        #label_svm_pred = label_predictor(list_compressed_data_train, list_compressed_data_test, names, authors_list)
-        
-        #if u % 1 == 0:
-        #r = testing(problem_collection, model, authors_list, freq_feature, label_svm_pred)
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    #quit()    
-       
-        if sum(loss_general[-1:])/1 <= 0.01*loss_general[0]:
-        #if len(acc_general_encoder) == 1:
-            del acc_general_encoder,loss_general,  inputs, corrupted 
-            del list_of_names, freq_feature, optimiser_training, m_ 
-            del optimiser_test, optimiser, problem_collection
-            del feat, test, loss_function1, loss_function2
-            #gc.collect()
-            return model
-    #return model
-       
-       
-        
-def testing(p_, m_, authors_list, f_, label_svm_pred):
     
-    #global problem_collection, model
-    problem_collection, model = p_, m_
-    freq_feature = f_
+ 
+    
+    
+
     
     
   
+    acc_general_encoder.append(acc_encoder/(x+1))
+  
+    loss_general.append(loss_comparator/nb_)  
+    
+    
+    
+    
+    base1 = round((max(loss_general)-min(loss_general))/10,5)
+  
+    base4 = round(max(acc_general_encoder)/10,5)
+
+    if base1 <= 0.0:
+        base1 = max(loss_general)/10.0
+  
+    if base4 <= 0.0:
+        base4 = 1.0
+  
+    
+    if best_loss is None:
+        best_loss = min(loss_general)
+ 
+        
+    if best_loss > min(loss_general):
+        best_loss = min(loss_general)
+     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+   
+    if sum(loss_general[-1:])/1 <= 0.01*loss_general[0]:
+     
+        return model
+       
+       
+        
+def testing(problem_collection, model, authors_list, freq_feature, label_svm_pred):
+    
     results = []
-    #model[0] = model[0].eval()
     model = model.eval()
     inputs = []
     feats = []
     for (feat, test, names) in freq_feature:
-                #print(feat)
-                #quit()
+               
         feat = torch.from_numpy(feat)
         test = torch.from_numpy(test)
         inputs.append(test)
@@ -2039,26 +1692,13 @@ def testing(p_, m_, authors_list, f_, label_svm_pred):
         del feat, test
         
     
-    #print(test.size()[0])
-    
-    #quit()
-    
+
     svm_result = 0.0
     
-    #text_names = [text_name for _, (text_name, _) in enumerate(problem_collection['unknown'].items())]
-    #print(text_names)
     x = -1
     answers = []
     for text_name, _ in strange(problem_collection['unknown'].items()): #range(test.size()[0]): #x, (text_name, text_to_test) in enumerate(problem_collection['unknown'].items()):   
         x += 1
-        #del mi
-        #outputs[text_name] = 
-        #if number_tests == 3:
-        #    break
-      
-      
-        
-        #print(x)
         
         i_s = []
         for i in inputs:
@@ -2078,46 +1718,27 @@ def testing(p_, m_, authors_list, f_, label_svm_pred):
         
         output1, t, z, e, q = model(i_s, False)
         
-        result1 = output1.data.cpu().squeeze().topk(1,dim=0)[1][0]#.numpy().tolist()
-        #print(result1)
-        #result2 = output2.data.cpu().squeeze().topk(1,dim=0)[1][0]
-        #result3 = output3.data.cpu().squeeze().topk(1,dim=0)[1][0]
-        #all_results = torch.cat(output,dim=0).sum(dim=0).max(0)[1].data[0]
+        result1 = output1.data.cpu().squeeze().topk(1,dim=0)[1][0]
+       
         
         top_values = output1.data.cpu().squeeze().topk(3,dim=0)[0].numpy().tolist()
-        #print(top_values)
-        #results.append(output1)
+     
   
         best1 = authors_list[result1]
-        #best2 = authors_list[result1[1]]
-        #best3 = authors_list[result1[2]]
-        del i_s, output1, t, z, e, q, result1
-        
-        #print(best1)
-        #answers = []
-        #for nb1, (author, texts) in enumerate(problem_collection.items()):
-        #break
-        #    for nb2, (text_name, text_self) in enumerate(texts.items()):
-        #        if author == 'unknown':
+       
         
         
         input = {}
         input["unknown-text"] = text_name
         input["predicted-author"] = best1
         answers.append(input)
-        #     "unknown-text": "unknown00024.txt",
-        #"predicted-author": "candidate00010"
-    #quit()        
+        
     del freq_feature, inputs, feats, 
     results, model, problem_collection, i, p_, m_, f_
-    #, text_name, text_to_test
-    
-    #gc.collect()
+   
     
     return  answers 
-        #results_general.append([text_name, _candidate_names, _candidate_results, candidate_results_singled,candidate_names_singled])   
-    
-        
+       
         
         
     
